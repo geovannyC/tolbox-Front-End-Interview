@@ -1,14 +1,18 @@
-import React from "react";
+import React, { useRef } from "react";
 import { Navigator } from "../nav/navigator";
-import { CardBackground } from "../card-background/cardBackground";
+import { Content } from "../content/content";
 import "../../index.css";
 export const Home = () => {
+  //Uso de ref para el llamado de las dunciones encargadas de inyextar la info
+  const childRefCDW = useRef();
+  const handleIncrementWords = (word) => {
+    childRefCDW.current.callFnHandleChangueDataWords(word);
+  };
   const SchemmaHome = () => {
     return (
       <>
-        <Navigator />
-      
-          <CardBackground />
+        <Navigator callFnSendData={handleIncrementWords} />
+        <Content ref={childRefCDW} />
       </>
     );
   };

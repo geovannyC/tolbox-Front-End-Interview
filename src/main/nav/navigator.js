@@ -1,4 +1,5 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
+import { getData } from "../../until/fetch";
 import {
   Nav,
   Navbar,
@@ -8,6 +9,7 @@ import {
   Container,
 } from "react-bootstrap";
 import styled from "styled-components";
+//uso de estilos para la barra de navegación
 const Styles = styled.div`
   .navbar {
     background-color: #f73a3a;
@@ -47,22 +49,51 @@ const Styles = styled.div`
   }
 `;
 
-export const Navigator = () => {
-  const [loading, setLoading] = useState(false)
-  const sendData = () => {
-    if(loading){
-      setLoading(false)
-    }else{
-      setLoading(true)
+export const Navigator = ({ callFnSendData }) => {
+  const [loading, setLoading] = useState(false),
+    [text, setText] = useState("");
+    //envio de info manejo de la respuesta
+  const sendData = async () => {
+    if (text.length > 0) {
+      const url = `iecho?text=${text}`;
+      setLoading(true);
+      await getData(url).then((response) => {
+        if (response) {
+          if (response.palindrome) {
+            callFnSendData({
+              palindrome: true,
+              text: text,
+            });
+          } else {
+            callFnSendData(response);
+          }
+          setLoading(false);
+        } else {
+          setLoading(false);
+        }
+      });
+    } else {
+      return false;
     }
   };
+  // ingreso del valor en el inut de la barra de navegación
+  const handleChangueText = (event) => {
+    let txt = event.target.value.replace(/[^a-zA-Z ]/g, "").toLowerCase();
+    setText(txt);
+  };
+  // esquema de la barra de nav
   const SchemmaNavigator = () => {
     return (
       <Styles>
         <Navbar expand="lg" className="justify-content-center">
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Form className="form-center">
-            <FormControl type="text" placeholder="Insert Text" className="" />
+          <Form onSubmit type="text" className="form-center">
+            <FormControl
+              type="text"
+              placeholder="Insert Text"
+              onChange={handleChangueText}
+              value={text}
+            />
           </Form>
           <Container>
             <Button
@@ -70,13 +101,14 @@ export const Navigator = () => {
               onClick={sendData}
               className="btn-navigator"
               variant="primary"
+              disabled={loading}
             >
-              {loading?"Loading...":"Send Text"}
+              {loading ? "Loading..." : "Send Text"}
             </Button>
           </Container>
         </Navbar>
       </Styles>
     );
   };
-  return SchemmaNavigator()
+  return SchemmaNavigator();
 };

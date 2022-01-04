@@ -8,6 +8,7 @@ import {
   Button,
   Container,
 } from "react-bootstrap";
+import InputGroup from 'react-bootstrap/InputGroup'
 import styled from "styled-components";
 //uso de estilos para la barra de navegación
 const Styles = styled.div`
@@ -87,14 +88,15 @@ export const Navigator = ({ callFnSendData }) => {
       <Styles>
         <Navbar expand="lg" className="justify-content-center">
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Form onSubmit type="text" className="form-center">
+          <InputGroup type="text" className="form-center">
             <FormControl
               type="text"
               placeholder="Insert Text"
               onChange={handleChangueText}
               value={text}
+              required
             />
-          </Form>
+          </InputGroup>
           <Container>
             <Button
               id="send-text"

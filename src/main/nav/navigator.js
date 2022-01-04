@@ -65,8 +65,10 @@ export const Navigator = ({ callFnSendData }) => {
               palindrome: true,
               text: text,
             });
+            setText("")
           } else {
             callFnSendData(response);
+            setText("")
           }
           setLoading(false);
         } else {
@@ -77,6 +79,13 @@ export const Navigator = ({ callFnSendData }) => {
       return false;
     }
   };
+  const listenKey =(event)=>{
+      if (event.charCode === 13) {
+        sendData()
+      }else{
+        return false
+      }
+  }
   // ingreso del valor en el inut de la barra de navegación
   const handleChangueText = (event) => {
     let txt = event.target.value.replace(/[^a-zA-Z ]/g, "").toLowerCase();
@@ -93,6 +102,9 @@ export const Navigator = ({ callFnSendData }) => {
               type="text"
               placeholder="Insert Text"
               onChange={handleChangueText}
+              onKeyPress={(e) => {
+                listenKey(e);
+              }}
               value={text}
               required
             />
